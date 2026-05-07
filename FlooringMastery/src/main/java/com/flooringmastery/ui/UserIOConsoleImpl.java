@@ -50,12 +50,12 @@ public class UserIOConsoleImpl implements UserIO{
     }
 
     @Override
-    public BigDecimal readBigDecimal(String prompt, BigDecimal min, BigDecimal max) {
+    public BigDecimal readBigDecimal(String prompt, BigDecimal min) {
         // Initialize the Big Decimal to be out of bounds
         BigDecimal bigDecimalInput = min.subtract(new BigDecimal("1"));
 
         // Keep prompting the user until the input is valid (within the min-max range)
-        while(bigDecimalInput.compareTo(min) < 0 || bigDecimalInput.compareTo(max) > 0){
+        while(bigDecimalInput.compareTo(min) < 0){
             System.out.println(prompt);
             stringInput = input.nextLine();
             bigDecimalInput = new BigDecimal(stringInput);
