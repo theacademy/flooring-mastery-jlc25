@@ -13,9 +13,9 @@ public class App {
         FlooringMasterView view = new FlooringMasterView(io);
 
         // Instantiate the DAO
-        OrderDao orderDao = new OrderDaoImpl();
-        TaxDao taxDao = new TaxDaoImpl();
-        ProductDao productDao = new ProductDaoImpl();
+        // OrderDao orderDao = new OrderDaoImpl();
+        // TaxDao taxDao = new TaxDaoImpl();
+        // ProductDao productDao = new ProductDaoImpl();
 
         // Instantiate the Service Layer
         // TODO: connect the DAOs to it
