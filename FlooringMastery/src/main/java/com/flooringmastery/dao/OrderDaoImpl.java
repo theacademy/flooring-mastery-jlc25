@@ -1,10 +1,8 @@
 package com.flooringmastery.dao;
 
 import com.flooringmastery.dto.Order;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+
+import java.io.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -71,8 +69,11 @@ public class OrderDaoImpl implements OrderDao{
 
     // TODO: implement
     @Override
-    public void exportAllOrders() {
-
+    public void exportAllOrders() throws Exception {
+        for (LocalDate date : orders.keySet()){
+            // Write orders for the date
+            writeOrdersForDate(date);
+        }
     }
 
     private void loadOrderList() throws FileNotFoundException{
@@ -166,17 +167,37 @@ public class OrderDaoImpl implements OrderDao{
         return orderAsText;
     }
 
-    // TODO : finish implementing
-    private void writeOrdersForDate(LocalDate date){
+    private void writeOrdersForDate(LocalDate date) throws Exception{
         // Get filename for date
+        File directory = new File(ORDERS_DIRECTORY);
+        String day = date.format(DateTimeFormatter.ofPattern("dd"));
+        String month = date.format(DateTimeFormatter.ofPattern("MM"));
+        String year = date.format(DateTimeFormatter.ofPattern("yyyy"));
+        String filenameForDate = "/Orders_" + month + day + year + ".txt";
 
+        // File to write out to
+        PrintWriter out;
+        try {
+            out = new PrintWriter(new FileWriter(directory + filenameForDate));
+        } catch (IOException e) {
+            // If the file doesn't have the right permissions
+            throw new FlooringMasteryPersistenceException(
+                    "Could not save order data.", e);
+        }
+
+        //Initialize header
         String header = "OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total";
+        out.println(header);
+
+        // Write every order for the date, line by line
         List<Order> ordersList = orders.get(date);
 
         for (Order order: ordersList){
-
+            String orderString = marshallOrder(order);
+            out.println(orderString);
+            out.flush();
         }
-
+        out.close();
     }
 
     public Integer getMaxOrderNumber(){

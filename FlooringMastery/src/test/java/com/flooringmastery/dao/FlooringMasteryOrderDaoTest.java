@@ -119,4 +119,64 @@ public class FlooringMasteryOrderDaoTest {
         assertTrue(ordersForDate.contains(order));
     }
 
+    @Test
+    public void addOrderAndWriteToFile() throws Exception {
+        // Initialize date, order
+        LocalDate date = LocalDate.parse("03052026", DateTimeFormatter.ofPattern("MMddyyyy"));
+        Order order = new Order();
+
+        order.setOrderNumber(orderDao.getMaxOrderNumber());
+        order.setCustomerName("Josephine");
+        order.setState("TX");
+        order.setTaxRate(new BigDecimal("4.45"));
+        order.setProductType("Tile");
+        order.setArea(new BigDecimal("50"));
+        order.setCostPerSquareFoot(new BigDecimal("3.50"));
+        order.setLaborCostPerSquareFoot(new BigDecimal("4.15"));
+        order.setMaterialCost(new BigDecimal("175"));
+        order.setLaborCost(new BigDecimal("225"));
+        order.setTax(new BigDecimal("17.8"));
+        order.setTotal(new BigDecimal("417.8"));
+
+        // Add order to DAO
+        orderDao.addOrder(date, order);
+
+        List<Order> ordersForDate = orderDao.getAllOrdersForDate(date);
+
+        // Check if order is present in the list
+        assertTrue(ordersForDate.contains(order));
+
+        orderDao.exportAllOrders();
+    }
+
+    @Test
+    public void removeOrderAndWriteToFile() throws Exception {
+        // Initialize date, order
+        LocalDate date = LocalDate.parse("03052026", DateTimeFormatter.ofPattern("MMddyyyy"));
+        Order order = new Order();
+
+        order.setOrderNumber(orderDao.getMaxOrderNumber());
+        order.setCustomerName("Josephine");
+        order.setState("TX");
+        order.setTaxRate(new BigDecimal("4.45"));
+        order.setProductType("Tile");
+        order.setArea(new BigDecimal("50"));
+        order.setCostPerSquareFoot(new BigDecimal("3.50"));
+        order.setLaborCostPerSquareFoot(new BigDecimal("4.15"));
+        order.setMaterialCost(new BigDecimal("175"));
+        order.setLaborCost(new BigDecimal("225"));
+        order.setTax(new BigDecimal("17.8"));
+        order.setTotal(new BigDecimal("417.8"));
+
+        // Add order to DAO
+        orderDao.removeOrder(date, order);
+
+        List<Order> ordersForDate = orderDao.getAllOrdersForDate(date);
+
+        // Check if order is present in the list
+        assertFalse(ordersForDate.contains(order));
+
+        orderDao.exportAllOrders();
+    }
+
 }
