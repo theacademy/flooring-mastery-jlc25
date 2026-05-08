@@ -40,7 +40,26 @@ public class OrderDaoImpl implements OrderDao{
 
     @Override
     public Order editOrder(LocalDate date, Order order) {
-        orders.get(date).add(order);
+        // Find orders for given date
+        List<Order> ordersForDate= orders.get(date);
+
+        // Find an order that has a matching orderID and replace it by our new order
+        ordersForDate.stream().forEach((ord) -> {
+            if(ord.getOrderNumber().equals(order.getOrderNumber())){
+                ord.setCustomerName(order.getCustomerName());
+                ord.setState(order.getState());
+                ord.setTaxRate(order.getTaxRate());
+                ord.setProductType(order.getProductType());
+                ord.setArea(order.getArea());
+                ord.setCostPerSquareFoot(order.getCostPerSquareFoot());
+                ord.setLaborCostPerSquareFoot(order.getLaborCostPerSquareFoot());
+                ord.setMaterialCost(order.getMaterialCost());
+                ord.setLaborCost(order.getLaborCost());
+                ord.setTax(order.getTax());
+                ord.setTotal(order.getTotal());
+            }
+        });
+
         return order;
     }
 

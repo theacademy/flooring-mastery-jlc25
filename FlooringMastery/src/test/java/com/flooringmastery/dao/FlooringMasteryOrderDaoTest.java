@@ -10,8 +10,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FlooringMasteryOrderDaoTest {
@@ -60,6 +59,63 @@ public class FlooringMasteryOrderDaoTest {
         List<Order> ordersForDate = orderDao.getAllOrdersForDate(date);
 
         // Check if order is present in the list
+        assertTrue(ordersForDate.contains(order));
+    }
+
+    @Test
+    public void removeOrder(){
+        // Initialize date, order
+        LocalDate date = LocalDate.parse("06012013", DateTimeFormatter.ofPattern("MMddyyyy"));
+        Order order = new Order();
+
+        order.setOrderNumber(1);
+        order.setCustomerName("Ada Lovelace");
+        order.setState("CA");
+        order.setTaxRate(new BigDecimal("25.00"));
+        order.setProductType("Tile");
+        order.setArea(new BigDecimal("249.00"));
+        order.setCostPerSquareFoot(new BigDecimal("3.50"));
+        order.setLaborCostPerSquareFoot(new BigDecimal("4.15"));
+        order.setMaterialCost(new BigDecimal("871.50"));
+        order.setLaborCost(new BigDecimal("1033.35"));
+        order.setTax(new BigDecimal("476.21"));
+        order.setTotal(new BigDecimal("2381.06"));
+
+        // Add order to DAO
+        orderDao.removeOrder(date, order);
+
+        List<Order> ordersForDate = orderDao.getAllOrdersForDate(date);
+
+        // Check if order is present in the list
+        assertFalse(ordersForDate.contains(order));
+    }
+
+
+    @Test
+    public void editOrder(){
+        // Initialize date, order with information we want to replace
+        LocalDate date = LocalDate.parse("06012013", DateTimeFormatter.ofPattern("MMddyyyy"));
+        Order order = new Order();
+
+        order.setOrderNumber(1);
+        order.setCustomerName("Aya Lovelace");
+        order.setState("FL");
+        order.setTaxRate(new BigDecimal("25.00"));
+        order.setProductType("Wood");
+        order.setArea(new BigDecimal("249.00"));
+        order.setCostPerSquareFoot(new BigDecimal("3.50"));
+        order.setLaborCostPerSquareFoot(new BigDecimal("4.15"));
+        order.setMaterialCost(new BigDecimal("871.50"));
+        order.setLaborCost(new BigDecimal("1033.35"));
+        order.setTax(new BigDecimal("476.21"));
+        order.setTotal(new BigDecimal("2381.06"));
+
+        // Add order to DAO
+        orderDao.editOrder(date, order);
+
+        List<Order> ordersForDate = orderDao.getAllOrdersForDate(date);
+
+        // Check if edited order is present in the list
         assertTrue(ordersForDate.contains(order));
     }
 
