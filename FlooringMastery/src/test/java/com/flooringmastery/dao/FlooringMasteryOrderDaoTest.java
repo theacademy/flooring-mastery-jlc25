@@ -43,15 +43,15 @@ public class FlooringMasteryOrderDaoTest {
         order.setOrderNumber(orderDao.getMaxOrderNumber());
         order.setCustomerName("Sabrina");
         order.setState("CA");
-        order.setTaxRate(new BigDecimal("10.5"));
+        order.setTaxRate(new BigDecimal("25.00"));
         order.setProductType("Wood");
         order.setArea(new BigDecimal("100"));
-        order.setCostPerSquareFoot(new BigDecimal("5.4"));
-        order.setLaborCostPerSquareFoot(new BigDecimal("3.5"));
-        order.setMaterialCost(new BigDecimal("540"));
-        order.setLaborCost(new BigDecimal("350"));
-        order.setTax(new BigDecimal("93.45"));
-        order.setTotal(new BigDecimal("983.45"));
+        order.setCostPerSquareFoot(new BigDecimal("5.15"));
+        order.setLaborCostPerSquareFoot(new BigDecimal("4.75"));
+        order.setMaterialCost(new BigDecimal("515"));
+        order.setLaborCost(new BigDecimal("475"));
+        order.setTax(new BigDecimal("247.5"));
+        order.setTotal(new BigDecimal("1237.5"));
 
         // Add order to DAO
         orderDao.addOrder(date, order);

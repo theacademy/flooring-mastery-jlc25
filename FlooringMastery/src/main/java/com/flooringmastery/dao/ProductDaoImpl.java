@@ -18,15 +18,15 @@ public class ProductDaoImpl implements ProductDao{
     public static final String DELIMITER = ",";
     HashMap<String, Product> products;
 
-    ProductDaoImpl(String productFile){
+    public ProductDaoImpl(String productFile){
         PRODUCT_FILE = productFile;
         products = new HashMap<>();
     }
 
     @Override
-    public List<Product> getAllProducts() throws FileNotFoundException {
+    public HashMap<String, Product> getAllProducts() throws FileNotFoundException {
         loadProductList();
-        return new ArrayList<>(products.values());
+        return products;
     }
 
     @Override

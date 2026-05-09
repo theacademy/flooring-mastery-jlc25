@@ -16,7 +16,7 @@ public class OrderDaoImpl implements OrderDao{
     Set<LocalDate> newOrderDates;
     private int maxOrderNumber = 0;
 
-    OrderDaoImpl(String ordersDirectory) throws FileNotFoundException {
+    public OrderDaoImpl(String ordersDirectory) throws FileNotFoundException {
         ORDERS_DIRECTORY = ordersDirectory;
         orders = new HashMap<>();
         newOrderDates = new HashSet<>();
@@ -61,6 +61,10 @@ public class OrderDaoImpl implements OrderDao{
         return order;
     }
 
+    public Order getOrder(LocalDate date, Integer orderID){
+        return orders.get(date).stream().filter((order -> order.getOrderNumber().equals(orderID))).findFirst().orElse(null);
+    }
+
     @Override
     public Order removeOrder(LocalDate date, Order order) {
         orders.get(date).remove(order);
@@ -69,7 +73,7 @@ public class OrderDaoImpl implements OrderDao{
 
     // TODO: implement
     @Override
-    public void exportAllOrders() throws Exception {
+    public void exportAllOrders() throws FlooringMasteryPersistenceException {
         for (LocalDate date : orders.keySet()){
             // Write orders for the date
             writeOrdersForDate(date);
@@ -167,7 +171,7 @@ public class OrderDaoImpl implements OrderDao{
         return orderAsText;
     }
 
-    private void writeOrdersForDate(LocalDate date) throws Exception{
+    private void writeOrdersForDate(LocalDate date) throws FlooringMasteryPersistenceException{
         // Get filename for date
         File directory = new File(ORDERS_DIRECTORY);
         String day = date.format(DateTimeFormatter.ofPattern("dd"));

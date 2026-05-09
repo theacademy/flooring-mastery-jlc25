@@ -9,8 +9,8 @@ public interface OrderDao {
     public List<Order> getAllOrdersForDate(LocalDate date);
     public Order addOrder(LocalDate date, Order order);
     public Order editOrder(LocalDate date, Order order);
+    Order getOrder(LocalDate date, Integer orderID);
     public Order removeOrder(LocalDate date, Order order);
     public void exportAllOrders() throws Exception;
-
     Integer getMaxOrderNumber();
 }
