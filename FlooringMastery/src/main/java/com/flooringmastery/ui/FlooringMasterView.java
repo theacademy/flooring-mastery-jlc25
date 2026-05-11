@@ -183,7 +183,7 @@ public class FlooringMasterView {
 
             try{
                 // Return area if it's valid (at least 100)
-                if (new BigDecimal(inputString).compareTo(new BigDecimal("100")) > 0){
+                if (new BigDecimal(inputString).compareTo(new BigDecimal("100")) >= 0){
                     isValid = true;
                 }
             }catch(NumberFormatException e){

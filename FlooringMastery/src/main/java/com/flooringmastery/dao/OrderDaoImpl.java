@@ -72,11 +72,9 @@ public class OrderDaoImpl implements OrderDao{
         return order;
     }
 
-    // TODO: implement
     @Override
     public void exportAllOrders() throws FlooringMasteryPersistenceException {
-        // Write all orders to single file
-
+        // For each date, get all orders
         for (LocalDate date : orders.keySet()){
             // Write orders for the date
             writeOrdersForDate(date);
@@ -99,11 +97,11 @@ public class OrderDaoImpl implements OrderDao{
 
             // Remove the file extension
             String[] filenameWithoutExtension = filename.split("\\.");
-            filename = filenameWithoutExtension[0];
+            filename = filenameWithoutExtension[0]; // First part of the filename without extension
 
             // Parse date
             String[] filenameTokens= filename.split(FILENAME_DELIMITER);
-            String dateString = filenameTokens[1];
+            String dateString = filenameTokens[1]; // Date part from the file name (MMddyyyy)
 
             // Generate Local Date based on filename
             LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("MMddyyyy"));
@@ -203,6 +201,7 @@ public class OrderDaoImpl implements OrderDao{
         List<Order> ordersList = orders.get(date);
 
         for (Order order: ordersList){
+            // Transform order to string and write it to file
             String orderString = marshallOrder(order);
             out.println(orderString);
             out.flush();
