@@ -23,12 +23,14 @@ public class TaxDaoImpl implements TaxDao{
 
     @Override
     public List<Tax> getAllTaxes() throws FileNotFoundException {
+        // Get updated tax list from files
         loadTaxList();
         return new ArrayList<>(taxes.values());
     }
 
     @Override
     public Tax getTaxByState(String stateAbbreviation) throws FileNotFoundException {
+        // Get updated tax list from files
         loadTaxList();
         return taxes.get(stateAbbreviation);
     }

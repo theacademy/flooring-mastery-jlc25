@@ -20,7 +20,6 @@ public interface FlooringMasterServiceLayer {
     public HashMap<String, Product> getAllProducts() throws FileNotFoundException;
     public void exportAllData() throws Exception;
     public List<Order> getAllOrdersForDate(LocalDate date);
-
     public Order validateTax(Order order) throws FileNotFoundException , FlooringMasterTaxNotFoundException;
     public Order validateProduct(Order order) throws FileNotFoundException , FlooringMasterTaxNotFoundException;
     public Order generateOrderNumber(Order order);

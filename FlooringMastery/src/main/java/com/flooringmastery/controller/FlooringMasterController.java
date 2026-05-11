@@ -83,12 +83,11 @@ public class FlooringMasterController {
         // Get customer name
         Order order = view.getNewOrderCustomer();
 
-        // Get tax state abbreviation
+        // Get user input for tax state abbreviation until it's valid
         boolean validTaxState = false;
         while (!validTaxState){
             try{
                 // Get tax info from user and validate with service
-                //String taxStateAbbreviation =
                 view.getNewTaxInfo(order);
                 order = service.validateTax(order);
 
@@ -104,6 +103,7 @@ public class FlooringMasterController {
         // Get all products to display them
         List<Product> products = new ArrayList<>(service.getAllProducts().values());
 
+        // Get user input for product until it's valid
         while (!validProduct){
             try{
                 view.displayAllProducts(products);
@@ -141,12 +141,12 @@ public class FlooringMasterController {
         // Get order date and number
         LocalDate date = view.getDateInput();
 
-        // Validate date
+        // Keep asking user for date until it's valid (orders exist for the date)
         while (service.getAllOrdersForDate(date)==null){
             date = view.getDateInput();
         }
 
-        // Get order number
+        // Get user input for order number
         Integer orderID = view.getExistingOrderNumber();
 
         // Try to get original order if it exists
@@ -173,7 +173,7 @@ public class FlooringMasterController {
         String newName = view.editCustomerName(originalOrder.getCustomerName());
         newOrder.setCustomerName(newName);
 
-        // Get tax state abbreviation
+        // Get user input for tax state abbreviation until it's valid
         boolean validTaxState = false;
         String newState = "";
 
@@ -190,7 +190,7 @@ public class FlooringMasterController {
             }
         }
 
-        // Get product name
+        // Get user input for product name until it's valid
         boolean validProduct = false;
         String newProduct="";
 
@@ -236,7 +236,7 @@ public class FlooringMasterController {
         // Get order date and number
         LocalDate date = view.getDateInput();
 
-        // Validate date
+        // Get user input for date until it's a valid date
         while (service.getAllOrdersForDate(date)==null){
             date = view.getDateInput();
         }

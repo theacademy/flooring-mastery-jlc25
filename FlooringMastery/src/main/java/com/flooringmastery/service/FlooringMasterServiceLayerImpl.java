@@ -29,9 +29,8 @@ public class FlooringMasterServiceLayerImpl implements FlooringMasterServiceLaye
     }
 
     @Override
-    public void addOrder(LocalDate date, Order order) throws FileNotFoundException {
-
-        // Validate
+    public void addOrder(LocalDate date, Order order) throws FileNotFoundException, FlooringMasterTaxNotFoundException, FlooringMasterProductNotFoundException {
+        // Validate data
         validateTax(order);
         validateProduct(order);
 
@@ -65,6 +64,7 @@ public class FlooringMasterServiceLayerImpl implements FlooringMasterServiceLaye
             throw new FlooringMasterProductNotFoundException("The product \"" + productName + "\" was not found in the product file.");
         }
 
+        // Assign product information to fields
         BigDecimal costPerSquareFoot = product.getCostPerSquareFoot();
         order.setCostPerSquareFoot(costPerSquareFoot);
 
@@ -100,6 +100,7 @@ public class FlooringMasterServiceLayerImpl implements FlooringMasterServiceLaye
 
     @Override
     public Order getOrder(LocalDate date, Integer orderID) throws FlooringMasterOrderDoesNotExistException{
+        // Get order if there's a matching date and order ID
         if (orderDao.getOrder(date, orderID) == null){
             throw new FlooringMasterOrderDoesNotExistException("Order number " + orderID + " does not exist.");
         }

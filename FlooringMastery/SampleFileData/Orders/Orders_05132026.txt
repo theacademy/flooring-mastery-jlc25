@@ -1,2 +1,0 @@
-OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
-4,Kaya Aksoy,TX,4.45,Wood,102,5.15,4.75,525.30,484.50,40.39,1050.19

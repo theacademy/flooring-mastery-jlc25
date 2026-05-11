@@ -43,7 +43,7 @@ public class FlooringMasterView {
 
         while (!validName){
 
-            customerName = getNameInput(">> Please enter Customer Name: ");
+            customerName = getNameInput(">> Please enter Customer Name: "); // getNameInput validates name
             if(customerName.isBlank()){
                 io.print("INVALID INPUT: Customer name cannot be blank.");
             }

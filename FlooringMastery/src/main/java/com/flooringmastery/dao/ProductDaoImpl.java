@@ -25,12 +25,14 @@ public class ProductDaoImpl implements ProductDao{
 
     @Override
     public HashMap<String, Product> getAllProducts() throws FileNotFoundException {
+        // Get updated products from file
         loadProductList();
         return products;
     }
 
     @Override
     public Product getProduct(String productName) throws FileNotFoundException {
+        // Get updated products from file
         loadProductList();
         return products.get(productName);
     }
@@ -49,7 +51,7 @@ public class ProductDaoImpl implements ProductDao{
             while(scanner.hasNextLine()){
                 String currentLine = scanner.nextLine();
 
-                // Process the string -> Tax & add to our taxes
+                // Process the string -> Product & add to our products
                 Product product = unmarshallProduct(currentLine);
                 products.put(product.getProductType(), product);
             }
@@ -59,7 +61,7 @@ public class ProductDaoImpl implements ProductDao{
     }
 
     private Product unmarshallProduct(String productLine){
-        // Split line and load tax with tokens
+        // Split line and load product with tokens
         Product product = new Product();
         String[] tokens = productLine.split(DELIMITER);
 
