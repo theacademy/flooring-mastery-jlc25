@@ -13,7 +13,7 @@ public interface FlooringMasterServiceLayer {
     public void addOrder(LocalDate date, Order order) throws FileNotFoundException;
     public Order getOrder(LocalDate date, Integer orderID);
     public Order removeOrder(LocalDate date, Integer orderID);
-    public Order editOrder(LocalDate date, Integer orderID);
+    public Order editOrder(LocalDate date, Order order);
     public List<Tax> getAllTaxes() throws FileNotFoundException;
     public Tax getTax(String state) throws FileNotFoundException;
     public Product getProduct(String productType) throws FileNotFoundException;
@@ -23,5 +23,6 @@ public interface FlooringMasterServiceLayer {
 
     public Order validateTax(Order order) throws FileNotFoundException , FlooringMasterTaxNotFoundException;
     public Order validateProduct(Order order) throws FileNotFoundException , FlooringMasterTaxNotFoundException;
-    public Order generateOrderNumberAndCalculateCosts(Order order);
+    public Order generateOrderNumber(Order order);
+    public Order calculateCosts(Order order);
 }

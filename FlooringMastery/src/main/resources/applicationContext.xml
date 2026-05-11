@@ -18,6 +18,33 @@
     <!-- Bean definitions go here -->
     <bean id="userIO" class="com.flooringmastery.ui.UserIOConsoleImpl" />
 
-    <bean/>
+    <bean id="view" class="com.flooringmastery.ui.FlooringMasterView">
+        <constructor-arg ref="userIO"/>
+    </bean>
+
+    <bean id="orderDao" class="com.flooringmastery.dao.OrderDaoImpl">
+        <constructor-arg value="FlooringMastery/SampleFileData/Orders"/>
+    </bean>
+
+    <bean id="taxDao" class="com.flooringmastery.dao.TaxDaoImpl">
+        <constructor-arg value="FlooringMastery/SampleFileData/Data/Taxes.txt"/>
+    </bean>
+
+    <bean id="productDao" class="com.flooringmastery.dao.ProductDaoImpl">
+    <constructor-arg value="FlooringMastery/SampleFileData/Data/Products.txt"/>
+    </bean>
+
+    <bean id="serviceLayer"
+          class="com.flooringmastery.service.FlooringMasterServiceLayerImpl">
+        <constructor-arg ref="orderDao"/>
+        <constructor-arg ref="taxDao"/>
+        <constructor-arg ref="productDao"/>
+    </bean>
+
+    <bean id="controller"
+          class="com.flooringmastery.controller.FlooringMasterController">
+        <constructor-arg ref="serviceLayer"/>
+        <constructor-arg ref="view"/>
+    </bean>
 
 </beans>

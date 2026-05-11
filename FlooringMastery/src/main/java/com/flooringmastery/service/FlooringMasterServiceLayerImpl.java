@@ -46,7 +46,7 @@ public class FlooringMasterServiceLayerImpl implements FlooringMasterServiceLaye
 
         // Check if state is in tax file
         if (tax==null){
-            throw new FlooringMasterTaxNotFoundException("The state " + state + " was not found in the tax file.");
+            throw new FlooringMasterTaxNotFoundException("The state \"" + state + "\" was not found in the tax file.");
         }
 
         BigDecimal taxRate = tax.getTaxRate();
@@ -62,7 +62,7 @@ public class FlooringMasterServiceLayerImpl implements FlooringMasterServiceLaye
 
         // Check if product is in product file
         if(product==null){
-            throw new FlooringMasterProductNotFoundException("The product " + productName + " was not found in the product file.");
+            throw new FlooringMasterProductNotFoundException("The product \"" + productName + "\" was not found in the product file.");
         }
 
         BigDecimal costPerSquareFoot = product.getCostPerSquareFoot();
@@ -74,17 +74,20 @@ public class FlooringMasterServiceLayerImpl implements FlooringMasterServiceLaye
         return order;
     }
 
-    public Order generateOrderNumberAndCalculateCosts(Order order){
+    public Order generateOrderNumber(Order order){
         // Generate Order Number
         Integer orderID = orderDao.getMaxOrderNumber();
-        order.setOrderNumber(orderID);
+        order.setOrderNumber(orderID+1);
+        return order;
+    }
 
+    public Order calculateCosts(Order order){
         // Calculate costs
         BigDecimal area = order.getArea();
-        BigDecimal materialCost = order.getCostPerSquareFoot().multiply(area); // Area * Cost per square foot
-        BigDecimal laborCost = order.getLaborCostPerSquareFoot().multiply(area); // Area * Labor cost per square foot
-        BigDecimal taxValue = materialCost.add(laborCost).multiply(order.getTaxRate().divide(new BigDecimal("100"), RoundingMode.HALF_UP)); // (Material Cost + Labor Cost) * TaxRate/100
-        BigDecimal total = materialCost.add(laborCost.add(taxValue)); // Material cost + labor cost + tax value
+        BigDecimal materialCost = order.getCostPerSquareFoot().multiply(area).setScale(2, RoundingMode.HALF_UP); // Area * Cost per square foot
+        BigDecimal laborCost = order.getLaborCostPerSquareFoot().multiply(area).setScale(2, RoundingMode.HALF_UP); // Area * Labor cost per square foot
+        BigDecimal taxValue = materialCost.add(laborCost).multiply(order.getTaxRate().divide(new BigDecimal("100"), RoundingMode.HALF_UP)).setScale(2, RoundingMode.HALF_UP); // (Material Cost + Labor Cost) * TaxRate/100
+        BigDecimal total = materialCost.add(laborCost.add(taxValue)).setScale(2, RoundingMode.HALF_UP); // Material cost + labor cost + tax value
 
         // Assign values
         order.setMaterialCost(materialCost);
@@ -117,16 +120,10 @@ public class FlooringMasterServiceLayerImpl implements FlooringMasterServiceLaye
     }
 
     @Override
-    public Order editOrder(LocalDate date, Integer orderID) {
-        // Check if date exists and if order number exists and return order after editing it
-        if(getOrder(date, orderID) != null){
-            Order order = getOrder(date, orderID);
-            orderDao.editOrder(date, order);
-            return order;
-        }
-
-        // unsuccessful search
-        return null;
+    public Order editOrder(LocalDate date, Order newOrder) {
+        // Swap out the existing order with the new order
+        orderDao.editOrder(date, newOrder);
+        return newOrder;
     }
 
     @Override

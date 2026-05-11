@@ -1,0 +1,2 @@
+OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total
+5,fkkf,TX,4.45,Carpet,213123,2.25,2.10,479526.75,447558.30,37083.40,964168.45

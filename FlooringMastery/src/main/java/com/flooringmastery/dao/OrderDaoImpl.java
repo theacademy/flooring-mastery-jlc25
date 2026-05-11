@@ -42,7 +42,7 @@ public class OrderDaoImpl implements OrderDao{
         List<Order> ordersForDate= orders.get(date);
 
         // Find an order that has a matching orderID and replace it by our new order
-        ordersForDate.stream().forEach((ord) -> {
+        ordersForDate.forEach((ord) -> {
             if(ord.getOrderNumber().equals(order.getOrderNumber())){
                 ord.setCustomerName(order.getCustomerName());
                 ord.setState(order.getState());
@@ -62,6 +62,7 @@ public class OrderDaoImpl implements OrderDao{
     }
 
     public Order getOrder(LocalDate date, Integer orderID){
+        // Find the first order that has a matching order number for the provided date
         return orders.get(date).stream().filter((order -> order.getOrderNumber().equals(orderID))).findFirst().orElse(null);
     }
 
@@ -74,6 +75,8 @@ public class OrderDaoImpl implements OrderDao{
     // TODO: implement
     @Override
     public void exportAllOrders() throws FlooringMasteryPersistenceException {
+        // Write all orders to single file
+
         for (LocalDate date : orders.keySet()){
             // Write orders for the date
             writeOrdersForDate(date);
@@ -84,6 +87,9 @@ public class OrderDaoImpl implements OrderDao{
         // For each file in the directory
         File directory = new File(ORDERS_DIRECTORY);
         File[] allOrderFiles = directory.listFiles();
+
+        // check that the directory is not empty
+        // if (allOrderFiles == null){return;}
 
         for (File file: allOrderFiles){
             List<Order> orderPerDate = new ArrayList<>();
@@ -207,10 +213,4 @@ public class OrderDaoImpl implements OrderDao{
     public Integer getMaxOrderNumber(){
         return maxOrderNumber;
     }
-
-
-    // TODO: stretch goal
-    // private void writeBackup(){
-    //
-    // }
 }

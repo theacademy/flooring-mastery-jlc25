@@ -25,12 +25,13 @@ public class FlooringMasteryTaxDaoTest {
         String stateName = "Washington";
         BigDecimal taxRate = new BigDecimal("9.25");
 
+        // Create new tax object
         Tax tax = new Tax();
         tax.setStateAbbreviation(stateAbbreviation);
         tax.setStateName(stateName);
         tax.setTaxRate(taxRate);
 
-        Tax findTax = taxDao.getTaxByState(stateName);
+        Tax findTax = taxDao.getTaxByState(stateAbbreviation);
 
         assertEquals(tax, findTax);
     }
@@ -42,12 +43,13 @@ public class FlooringMasteryTaxDaoTest {
         String stateName = "Florida";
         BigDecimal taxRate = new BigDecimal("9.25");
 
+        // Make
         Tax tax = new Tax();
         tax.setStateAbbreviation(stateAbbreviation);
         tax.setStateName(stateName);
         tax.setTaxRate(taxRate);
 
-        Tax findTax = taxDao.getTaxByState(stateName);
+        Tax findTax = taxDao.getTaxByState(stateAbbreviation);
 
         // Should return null as there is no state with that name
         assertNull(findTax);

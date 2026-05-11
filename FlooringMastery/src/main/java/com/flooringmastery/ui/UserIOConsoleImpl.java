@@ -15,7 +15,7 @@ public class UserIOConsoleImpl implements UserIO{
 
     public String readString(String prompt){
         System.out.println(prompt);
-        stringInput = input.nextLine();
+        stringInput = input.nextLine().trim();
 
         return stringInput;
     }
@@ -23,7 +23,7 @@ public class UserIOConsoleImpl implements UserIO{
     @Override
     public Integer readInt(String prompt) {
         System.out.println(prompt);
-        stringInput = input.nextLine();
+        stringInput = input.nextLine().trim();
         return Integer.parseInt(stringInput);
     }
 
@@ -34,7 +34,7 @@ public class UserIOConsoleImpl implements UserIO{
         // Keep prompting the user until the input is valid (within the min-max range)
         while(bigDecimalInput<min || bigDecimalInput>max){
             System.out.println(prompt);
-            stringInput = input.nextLine();
+            stringInput = input.nextLine().trim();
             bigDecimalInput = Integer.parseInt(stringInput);
         }
 
@@ -44,7 +44,7 @@ public class UserIOConsoleImpl implements UserIO{
     @Override
     public BigDecimal readBigDecimal(String prompt) {
         System.out.println(prompt);
-        stringInput = input.nextLine();
+        stringInput = input.nextLine().trim();
 
         return new BigDecimal(stringInput);
     }
@@ -57,7 +57,7 @@ public class UserIOConsoleImpl implements UserIO{
         // Keep prompting the user until the input is valid (within the min-max range)
         while(bigDecimalInput.compareTo(min) < 0){
             System.out.println(prompt);
-            stringInput = input.nextLine();
+            stringInput = input.nextLine().trim();
             bigDecimalInput = new BigDecimal(stringInput);
         }
 

@@ -17,9 +17,9 @@ public class FlooringMasteryProductDaoStubImpl implements ProductDao {
         ProductDao productDao = new ProductDaoImpl(productFile);
 
         onlyProduct = new Product();
-        onlyProduct.setProductType("Wood");
-        onlyProduct.setCostPerSquareFoot(new BigDecimal("5.15"));
-        onlyProduct.setLaborCostPerSquareFoot(new BigDecimal("4.75"));
+        onlyProduct.setProductType("Tile");
+        onlyProduct.setCostPerSquareFoot(new BigDecimal("3.50"));
+        onlyProduct.setLaborCostPerSquareFoot(new BigDecimal("4.15"));
     }
 
     @Override

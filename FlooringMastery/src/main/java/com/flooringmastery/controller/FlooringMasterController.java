@@ -2,13 +2,16 @@ package com.flooringmastery.controller;
 
 import com.flooringmastery.dao.FlooringMasterOrderDoesNotExistException;
 import com.flooringmastery.dto.Order;
+import com.flooringmastery.dto.Product;
 import com.flooringmastery.service.FlooringMasterProductNotFoundException;
 import com.flooringmastery.service.FlooringMasterTaxNotFoundException;
 import com.flooringmastery.service.FlooringMasterServiceLayer;
 import com.flooringmastery.ui.FlooringMasterView;
 
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FlooringMasterController {
@@ -51,6 +54,8 @@ public class FlooringMasterController {
                     default:
                         unknownCommand();
                 }
+
+
             }
             exitMessage();
         } catch (Exception e) {
@@ -60,8 +65,11 @@ public class FlooringMasterController {
 
     public void displayOrders(){
         view.displayAllOrdersBanner();
+
+        // Get orders for given date
         LocalDate date = view.getDateInput();
         List<Order> orders = service.getAllOrdersForDate(date);
+
         view.displayAllOrders(orders);
     }
 
@@ -80,6 +88,7 @@ public class FlooringMasterController {
         while (!validTaxState){
             try{
                 // Get tax info from user and validate with service
+                //String taxStateAbbreviation =
                 view.getNewTaxInfo(order);
                 order = service.validateTax(order);
 
@@ -91,8 +100,13 @@ public class FlooringMasterController {
 
         // Get product name
         boolean validProduct = false;
+
+        // Get all products to display them
+        List<Product> products = new ArrayList<>(service.getAllProducts().values());
+
         while (!validProduct){
             try{
+                view.displayAllProducts(products);
                 // Get product info from user and validate with service
                 view.getNewProductInfo(order);
                 order = service.validateProduct(order);
@@ -106,7 +120,8 @@ public class FlooringMasterController {
         view.getArea(order);
 
         // Generate order number and calculate costs
-        service.generateOrderNumberAndCalculateCosts(order);
+        service.generateOrderNumber(order);
+        service.calculateCosts(order);
 
         // Summary of the fields
         view.displayOrder(order);
@@ -126,17 +141,93 @@ public class FlooringMasterController {
         // Get order date and number
         LocalDate date = view.getDateInput();
 
-        // Validate order number with service
+        // Validate date
+        while (service.getAllOrdersForDate(date)==null){
+            date = view.getDateInput();
+        }
 
-        // Prompt user with existing information
-        // Allow blank input (they will be the same as the original order)
+        // Get order number
+        Integer orderID = view.getExistingOrderNumber();
 
-        // Re-calculate order if needed
+        // Try to get original order if it exists
+        Order originalOrder;
+        try{
+            originalOrder = service.getOrder(date, orderID);
+        }catch(FlooringMasterOrderDoesNotExistException e){
+            view.displayErrorMessage(e.getMessage());
+            // Return to menu if the order does not exist (null)
+            return;
+        }
+
+        // Make a new order for the edit (in case user changes their mind at the end)
+        Order newOrder = new Order();
+
+        // Copy original values to new order in case user doesn't want to change certain fields
+        newOrder.setOrderNumber(originalOrder.getOrderNumber());
+        newOrder.setCustomerName(originalOrder.getCustomerName());
+        newOrder.setState(originalOrder.getState());
+        newOrder.setProductType(originalOrder.getProductType());
+        newOrder.setArea(originalOrder.getArea());
+
+        // Input for Customer name
+        String newName = view.editCustomerName(originalOrder.getCustomerName());
+        newOrder.setCustomerName(newName);
+
+        // Get tax state abbreviation
+        boolean validTaxState = false;
+        String newState = "";
+
+        while (!validTaxState){
+            try{
+                // Get tax info from user and validate with service
+                newState = view.editState(originalOrder.getState());
+                newOrder.setState(newState);
+                newOrder = service.validateTax(newOrder);
+
+                validTaxState = true;
+            } catch (FileNotFoundException | FlooringMasterTaxNotFoundException e) {
+                view.displayErrorMessage(e.getMessage());
+            }
+        }
+
+        // Get product name
+        boolean validProduct = false;
+        String newProduct="";
+
+        while (!validProduct){
+            try{
+                // Get product info from user and validate with service
+                newProduct = view.editProduct(originalOrder.getProductType());
+                newOrder.setProductType(newProduct);
+                newOrder = service.validateProduct(newOrder);
+                validProduct = true;
+            } catch (FileNotFoundException | FlooringMasterProductNotFoundException e) {
+                view.displayErrorMessage(e.getMessage());
+            }
+        }
+
+        // Area
+        BigDecimal newArea = view.editArea(originalOrder.getArea());
+        newOrder.setArea(newArea);
+
+        // Re-calculate order if one of the fields changed
+        if (!newName.equals(originalOrder.getCustomerName()) || !newState.equals(originalOrder.getState()) || !newProduct.equals(originalOrder.getProductType()) || !newArea.equals(originalOrder.getArea())){
+            service.calculateCosts(newOrder);
+            // Display new order info
+            view.displayOrder(newOrder);
+        }
+        else{
+            // Show unchanged order
+            view.displayOrder(originalOrder);
+        }
 
         // Ask user if they want to save
-
-        // Save if yes
-
+        boolean validation = view.displayValidationMessage("Do you want to save? ");
+        // Edit order
+        if (validation){
+            // Save if yes
+            service.editOrder(date, newOrder);
+        }
     }
 
     public void removeOrder() throws FlooringMasterOrderDoesNotExistException{
@@ -144,6 +235,13 @@ public class FlooringMasterController {
 
         // Get order date and number
         LocalDate date = view.getDateInput();
+
+        // Validate date
+        while (service.getAllOrdersForDate(date)==null){
+            date = view.getDateInput();
+        }
+
+        // Get order number
         Integer orderID = view.getExistingOrderNumber();
 
         // Validate order number with service
